@@ -13,6 +13,13 @@ provider:
   runtime: nodejs12.x
   region: ${self:custom.private.region}
   timeout: 65
+  iam:
+    role:
+      statements: # permissions for all of your functions can be set here
+        - Effect: Allow
+          Action: # Gives permission to DynamoDB tables in a specific region
+            - dynamodb:PutItem
+          Resource: !Sub "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${MetricsTablePhotoAssign}"
 
 functions:
   assign:
@@ -29,6 +36,18 @@ functions:
 
 resources:
   Resources:
+    MetricsTablePhotoAssign:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: metrics.photo-assign
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
     # Log Group
     AssignLogGroup:
       Type: AWS::Logs::LogGroup

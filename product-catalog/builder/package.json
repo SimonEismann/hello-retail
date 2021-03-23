@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/Nordstrom/hello-retail/product-catalog#readme",
   "dependencies": {
-    "kinesis-handler": "git+https://github.com/Nordstrom/kinesis-handler.git"
+    "kinesis-handler": "git+https://github.com/Nordstrom/kinesis-handler.git",
+    "uuid": "^8.1.0"
   }
 }
