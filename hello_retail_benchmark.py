@@ -20,84 +20,14 @@ event_processing:
 
 # API calls, ew=event-writer, pr=product-receive, pc=product-catalog
 
-def registerPhotographer(ew_url, pg_id, phone_number):
-  data = {
-    'schema': 'com.nordstrom/user-info/update-phone/1-0-0',
-    'id': pg_id,
-    'phone': phone_number,  # random 10-digit number
-    'origin': 'hello-retail/sb-register-photographer/dummy_id/dummy_name',
-  }
-  resp = requests.post(url=ew_url + "/event-writer", json=data)
-  if resp.status_code == 200:
-    return resp
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
-
-def newProduct(ew_url, prod_id, prod_category, prod_name, prod_brand, prod_desc):
-  data = {
-    'schema': 'com.nordstrom/product/create/1-0-0',
-    'id': prod_id,  # (`0000000${Math.floor(Math.abs(Math.random() * 10000000))}`).substr(-7) --> random 7-digit number
-    'origin': 'hello-retail/sb-create-product/dummy_id/dummy_name',
-    'category': prod_category.strip(),
-    'name': prod_name.strip(),
-    'brand': prod_brand.strip(),
-    'description': prod_desc.strip(),
-  }
-  resp = requests.post(url=ew_url + "/event-writer", json=data)
-  if resp.status_code == 200:
-    return resp
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
-
-def listCategories(pc_url):
-  resp = requests.get(url=pc_url + "/categories")
-  if resp.status_code == 200:
-    return resp.json()
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
-
-def listProductsByCategory(pc_url, category):
-  resp = requests.get(url=pc_url + f"/products?category={category}")  # category needs to be URI encoded!
-  if resp.status_code == 200:
-    return resp.json()
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
-
-def listProductsByID(pc_url, product_id):
-  resp = requests.get(url=pc_url + f"/products?id={product_id}")
-  if resp.status_code == 200:
-    return resp.json()
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
-
-def commitPhoto(pr_url, pg_id, phone_number, item_id, image):
-  data = {
-    'photographer': {
-      'id': pg_id,
-      'phone': phone_number
-    },
-    'For': item_id,
-    'Media': image  # base64 encoded file
-  }
-  resp = requests.post(url=pr_url + "/sms", json=data)
-  if resp.status_code == 200:
-    return resp
-  else:
-    raise Exception(f"Error code {resp.status_code}: {resp.content}")
-
 
 # Util
 
-def encondeImage(filepath):
-  image = open(filepath, 'rb')  # open binary file in read mode
-  image_64_encode = base64.b64encode(image.read())
-  image.close()
-  return image_64_encode.decode()
+def encodeImage(source_filename, target_filename):
+  with open(source_filename, 'rb') as image:  # open binary file in read mode
+    image_64_encode = base64.b64encode(image.read())
+    with open(target_filename, "wb") as target_image_file:
+      target_image_file.write(image_64_encode)
 
 
 # SB calls
@@ -127,21 +57,16 @@ def prepare(spec):
   logging.info(f"endpoint photo receive={spec['endpoint_photo_receive_api']}")
 
 
-def invokeAPI(response):
-  logging.info(f"{response}")
-  time.sleep(1)
-
-
 def invoke(spec):
-  photo_id = f"{random.randint(1000000000, 9999999999)}"
-  id = f"{random.randint(1000000, 9999999)}"
-  cat = f"category-{random.randint(1, 6)}"
-  invokeAPI(registerPhotographer(spec['endpoint_event_writer_api'], f"photographer-{photo_id}", photo_id))
-  invokeAPI(newProduct(spec['endpoint_event_writer_api'], id, cat, f"name{id}", f"brand-{id}", f"description-{id}"))
-  invokeAPI(listCategories(spec['endpoint_product_catalog_api']))
-  invokeAPI(listProductsByCategory(spec['endpoint_product_catalog_api'], cat))
-  invokeAPI(listProductsByID(spec['endpoint_product_catalog_api'], id))
-  invokeAPI(commitPhoto(spec['endpoint_photo_receive_api'], f"photographer-{photo_id}", photo_id, id, encondeImage(f"{os.path.dirname(__file__)}/benchmark_images/snowdrop.jpg")))
+  image_source_file = f"{os.path.dirname(__file__)}/benchmark_images/snowdrop.jpg"
+  image_target_file = f"{os.path.dirname(__file__)}/benchmark_images/snowdrop-base64.jpg"
+  encodeImage(image_source_file, image_target_file)
+
+  out_options = f"--out csv={spec.workload_log_file()}"
+  spec.run(f'''k6 run {out_options} -e \"EVENT_WRITER_URL={pec['endpoint_event_writer_api']}\" \
+    -e \"PRODUCT_CATALOG_URL={spec['endpoint_product_catalog_api']}\" \
+    -e \"PHOTO_RECEIVE_URL={spec['endpoint_photo_receive_api']}\" \
+    -e \"IMAGE_FILE={image_target_file}\" workload_script.js''', image = 'loadimpact/k6:0.30.0')
 
 
 def cleanup(spec):
