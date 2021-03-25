@@ -1,0 +1,8 @@
+{
+   "name":"2048MB",
+   "memSize":"2048",
+   "duration":300,
+   "load":10,
+   "repetitions":10,
+   "loadriverthreats":12
+}

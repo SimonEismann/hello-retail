@@ -17,6 +17,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${self:custom.private.region}
+  memorySize: ${env:MEMORY_SIZE}
   environment:
     STAGE: ${self:custom.stage}
   iam:
@@ -32,7 +33,6 @@ functions:
     role:
       Fn::GetAtt: [ EventWriter, Arn ]
     handler: eventWriterApi.eventWriter
-    memorySize: 1024
     environment:
       STREAM_NAME:
         Fn::ImportValue: ${self:custom.retailStream.custom.exportRetailStreamName}

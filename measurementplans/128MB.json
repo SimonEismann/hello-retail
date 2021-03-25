@@ -1,0 +1,8 @@
+{
+   "name":"128MB",
+   "memSize":"128",
+   "duration":300,
+   "load":10,
+   "repetitions":10,
+   "loadriverthreats":12
+}

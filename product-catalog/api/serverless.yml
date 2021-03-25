@@ -18,6 +18,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs12.x
+  memorySize: ${env:MEMORY_SIZE}
   region: ${self:custom.private.region}
   iam:
     role:
@@ -32,7 +33,6 @@ functions:
     role:
       Fn::GetAtt: [ ProductCatalogApiCategoriesReader, Arn ]
     handler: catalogApi.categories
-    memorySize: 1024
     environment:
       TABLE_PRODUCT_CATEGORY_NAME:
         Fn::ImportValue: ${self:custom.productCatalogBuilder.custom.exportProductCategoryTableName}
@@ -45,7 +45,6 @@ functions:
     role:
       Fn::GetAtt: [ ProductCatalogApiProductsReader, Arn ]
     handler: catalogApi.products
-    memorySize: 1024
     environment:
       TABLE_PRODUCT_CATALOG_NAME:
         Fn::ImportValue: ${self:custom.productCatalogBuilder.custom.exportProductCatalogTableName}

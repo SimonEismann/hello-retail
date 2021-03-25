@@ -14,6 +14,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${self:custom.private.region}
+  memorySize: ${env:MEMORY_SIZE}
   iam:
     role:
       statements: # permissions for all of your functions can be set here
@@ -27,7 +28,6 @@ functions:
     role:
       'Fn::GetAtt': [ ReportRole, Arn ]
     handler: report.handler
-    memorySize: 1024
     environment:
       RETAIL_STREAM_NAME:
         Fn::ImportValue: ${self:custom.retailStream.custom.exportRetailStreamName}

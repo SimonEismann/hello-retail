@@ -12,6 +12,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${self:custom.private.region}
+  memorySize: ${env:MEMORY_SIZE}
   timeout: 65
   iam:
     role:
@@ -26,7 +27,6 @@ functions:
     role:
       'Fn::GetAtt': [ AssignRole, Arn ]
     handler: assign.handler
-    memorySize: 1024
     environment:
       ACTIVITY_RECEIVE_ARN: ${self:custom.productPhotos.receiveActivityArn}
       TABLE_PHOTO_ASSIGNMENTS_NAME:

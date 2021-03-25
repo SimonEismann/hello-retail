@@ -14,6 +14,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${self:custom.private.region}
+  memorySize: ${env:MEMORY_SIZE}
   iam:
     role:
       statements: # permissions for all of your functions can be set here
@@ -27,7 +28,6 @@ functions:
     role:
       'Fn::GetAtt': [ ProcessorRole, Arn ]
     handler: processor.processKinesisEvent
-    memorySize: 1024
     environment:
       STAGE: ${self:custom.stage}
       STEP_FUNCTION:

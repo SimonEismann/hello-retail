@@ -23,6 +23,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${self:custom.private.region}
+  memorySize: ${env:MEMORY_SIZE}
   iam:
     role:
       statements: # permissions for all of your functions can be set here
@@ -36,7 +37,6 @@ functions:
     role:
       Fn::GetAtt: [ ProductCatalogBuilder, Arn ]
     handler: catalog.processKinesisEvent
-    memorySize: 1024
     environment:
       TABLE_PRODUCT_CATEGORY_NAME:
         Ref: ProductCategory
