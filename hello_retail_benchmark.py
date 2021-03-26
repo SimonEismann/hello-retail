@@ -93,7 +93,7 @@ def commitPhoto(pr_url, pg_id, phone_number, item_id, image):
 
 # Util
 
-def encondeImage(filepath):
+def encodeImage(filepath):
   image = open(filepath, 'rb')  # open binary file in read mode
   image_64_encode = base64.b64encode(image.read())
   image.close()
@@ -141,7 +141,7 @@ def invoke(spec):
   invokeAPI(listCategories(spec['endpoint_product_catalog_api']))
   invokeAPI(listProductsByCategory(spec['endpoint_product_catalog_api'], cat))
   invokeAPI(listProductsByID(spec['endpoint_product_catalog_api'], id))
-  invokeAPI(commitPhoto(spec['endpoint_photo_receive_api'], f"photographer-{photo_id}", photo_id, id, encondeImage(f"{os.path.dirname(__file__)}/benchmark_images/snowdrop.jpg")))
+  invokeAPI(commitPhoto(spec['endpoint_photo_receive_api'], f"photographer-{photo_id}", photo_id, id, encodeImage(f"{os.path.dirname(__file__)}/benchmark_images/snowdrop.jpg")))
 
 
 def cleanup(spec):

@@ -3,23 +3,26 @@
 cd /hello-retail
 
 # Deploy serverless infrastructure
-./deploy.sh eu-west-1 prod company team $EXP_MEMORY_SIZE | tee deployment.log
+./deploy.sh eu-west-1 prod company team ${EXP_MEMORY_SIZE} | tee deployment.log
 
 # Collect output
 URL_API_EVENT_WRITER=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/event-writer')
-URL_API_PRODUCT_CATALOG=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/categories')
+URL_API_PRODUCT_CATALOG_CATEGORIES=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/categories')
+URL_API_PRODUCT_CATALOG_PRODUCTS=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/products')
 URL_API_PHOTO_RECEIVE=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/sms')
 
 # Prep loadscript
-sed -i "s@URLAPIEVENTWRITERPLACEHOLDER@$URL_API_EVENT_WRITER@g" load.lua
-sed -i "s@URLAPIPRODUCTCATALOGPLACEHOLDER@$URL_API_PRODUCT_CATALOG@g" load.lua
-sed -i "s@URLAPIPHOTORECEIVEPLACEHOLDER@$URL_API_PHOTO_RECEIVE@g" load.lua
+cp load.lua load_backup.lua
+sed -i "s@URLAPIEVENTWRITERPLACEHOLDER@${URL_API_EVENT_WRITER}@g" load.lua
+sed -i "s@URLAPIPRODUCTCATALOGCATEGORIESPLACEHOLDER@${URL_API_PRODUCT_CATALOG_CATEGORIES}@g" load.lua
+sed -i "s@URLAPIPRODUCTCATALOGPRODUCTSPLACEHOLDER@${URL_API_PRODUCT_CATALOG_PRODUCTS}@g" load.lua
+sed -i "s@URLAPIPHOTORECEIVEPLACEHOLDER@${URL_API_PHOTO_RECEIVE}@g" load.lua
 
 # Run Load
 java -jar httploadgenerator.jar loadgenerator > loadlogs.txt 2>&1 &
-./generateConstantLoad.sh $EXP_LOAD $EXP_DURATION
+./generateConstantLoad.sh ${EXP_LOAD} ${EXP_DURATION}
 sleep 10
-java -jar httploadgenerator.jar director --ip localhost --load load.csv -o results.csv --lua load.lua --randomize-users -t $EXP_THREATS
+java -jar httploadgenerator.jar director --ip localhost --load load.csv -o results.csv --lua load.lua --randomize-users -t ${EXP_THREATS}
 
 # Collect results
 echo "duration,maxRss,fsRead,fsWrite,vContextSwitches,ivContextSwitches,userDiff,sysDiff,rss,heapTotal,heapUsed,external,elMin,elMax,elMean,elStd,bytecodeMetadataSize,heapPhysical,heapAvailable,heapLimit,mallocMem,netByRx,netPkgRx,netByTx,netPkgTx" > event-writer.csv
@@ -55,4 +58,5 @@ mv photo-report.csv /results/${EXP_NAME}/Repetition_${EXP_REPETITION}/photo-repo
 mv results.csv /results/${EXP_NAME}/Repetition_${EXP_REPETITION}/loadgenerator-results.csv
 
 # Shutdown
+cp load_backup.lua load.lua
 ./remove.sh eu-west-1 prod company team
