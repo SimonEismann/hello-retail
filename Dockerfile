@@ -1,5 +1,5 @@
 # Execute with the following command:
-# docker rm -f hello-retail ; docker build --build-arg AWS_ACCESS_KEY_ID=YOUR_PUBLIC_KEY --build-arg AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY . -t hello-retail && docker run -d --name hello-retail hello-retail && docker exec -it hello-retail bash /hello-retail/runner.sh
+# docker rm -f hello-retail ; docker build --no-cache --build-arg AWS_ACCESS_KEY_ID=YOUR_PUBLIC_KEY --build-arg AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY . -t hello-retail && docker run -d --name hello-retail hello-retail && docker exec -it hello-retail bash /hello-retail/runner.sh && docker cp hello-retail:/results .
 FROM ubuntu:18.04
 
 ARG AWS_ACCESS_KEY_ID

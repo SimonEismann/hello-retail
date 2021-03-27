@@ -62,3 +62,4 @@ web/app/bundle.js
 
 .sb/config.yml
 workload_options.js
+results/
