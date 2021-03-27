@@ -4,4 +4,4 @@ team: ${env:TEAM}
 stage: ${env:STAGE}
 
 domainName: hello-retail.biz
-teamPolicy: arn:aws:iam::aws:policy/AWSLambdaFullAccess 
+teamPolicy: arn:aws:iam::aws:policy/AWSLambda_FullAccess 

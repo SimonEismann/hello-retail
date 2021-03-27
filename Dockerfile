@@ -25,9 +25,7 @@ RUN aws configure set region eu-west-1
 
 RUN apt-get install openjdk-8-jre-headless --yes
 
-RUN git config --global user.name "Your Name"
-RUN git config --global user.email "you@example.com"
-RUN git clone --branch main https://github.com/simontrapp/hello-retail.git
+RUN git clone https://github.com/simontrapp/hello-retail.git
 WORKDIR /hello-retail/
 
 RUN chmod 777 /hello-retail/run.sh
@@ -37,6 +35,9 @@ RUN chmod 777 /hello-retail/generateConstantLoad.sh
 RUN chmod 777 /hello-retail/install.sh
 RUN chmod 777 /hello-retail/deploy.sh
 RUN chmod 777 /hello-retail/remove.sh
+RUN chmod 777 /hello-retail/build/0.env.sh
+RUN chmod 777 /hello-retail/build/1.install.sh
+RUN chmod 777 /hello-retail/build/2.sls.sh
 
 RUN dos2unix /hello-retail/run.sh
 RUN dos2unix /hello-retail/meta-run.sh
@@ -45,6 +46,9 @@ RUN dos2unix /hello-retail/generateConstantLoad.sh
 RUN dos2unix /hello-retail/install.sh
 RUN dos2unix /hello-retail/deploy.sh
 RUN dos2unix /hello-retail/remove.sh
+RUN dos2unix /hello-retail/build/0.env.sh
+RUN dos2unix /hello-retail/build/1.install.sh
+RUN dos2unix /hello-retail/build/2.sls.sh
 
 RUN ./install.sh eu-west-1 prod company team
 

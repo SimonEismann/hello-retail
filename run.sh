@@ -10,6 +10,10 @@ URL_API_EVENT_WRITER=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w
 URL_API_PRODUCT_CATALOG_CATEGORIES=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/categories')
 URL_API_PRODUCT_CATALOG_PRODUCTS=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/products')
 URL_API_PHOTO_RECEIVE=$(cat deployment.log | grep -oP --max-count=1 'https://[-\w.]+/\w+/sms')
+echo "Event Writer API: ${URL_API_EVENT_WRITER}"
+echo "Product Catalog Categories API: ${URL_API_PRODUCT_CATALOG_CATEGORIES}"
+echo "Product Catalog Products API: ${URL_API_PRODUCT_CATALOG_PRODUCTS}"
+echo "Photo Receive API: ${URL_API_PHOTO_RECEIVE}"
 
 # Prep loadscript
 cp load.lua load_backup.lua
