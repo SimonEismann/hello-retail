@@ -47,7 +47,8 @@ resources:
                   - !Sub 'arn:aws:iam::${AWS::AccountId}:root'
               Action: sts:AssumeRole
         ManagedPolicyArns:
-          - ${self:custom.private.teamPolicy}
+          - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+          - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
         Policies:
           - PolicyName: WriteToStream
             PolicyDocument:
@@ -75,7 +76,8 @@ resources:
                   - !Sub 'arn:aws:iam::${AWS::AccountId}:root'
               Action: sts:AssumeRole
         ManagedPolicyArns:
-          - ${self:custom.private.teamPolicy}
+          - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+          - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
         Policies:
           - PolicyName: ReadFromStream
             PolicyDocument:

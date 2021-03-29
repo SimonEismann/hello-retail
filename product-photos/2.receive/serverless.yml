@@ -77,7 +77,8 @@ resources:
               Principal:
                 Service: lambda.amazonaws.com
         ManagedPolicyArns:
-          - ${self:custom.private.teamPolicy}
+          - arn:aws:iam::aws:policy/AWSLambda_FullAccess
+          - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
         Policies:
           - PolicyName: CreateAndWriteToLogStream
             PolicyDocument:
