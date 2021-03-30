@@ -42,7 +42,7 @@ class ProductDataSource extends Component {
 
   getProductsByIdAsync(id) {
     return Promise.all([this.getProductByIdFromApiAsync(id), new Promise((resolve, reject) => {
-      https.get(`https://s3.amazonaws.com/${config.ImageBucket}/i/p/${id}`, (res) => {
+      https.get(`https://${config.ImageBucket}.s3.amazonaws.com/i/p/${id}`, (res) => {
         var { statusCode } = res;
         let error;
         if (statusCode !== 200) {
