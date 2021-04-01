@@ -4,5 +4,6 @@
    "duration":300,
    "load":10,
    "repetitions":10,
+   "region":"us-west-2",
    "loadriverthreats":12
 }

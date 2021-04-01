@@ -7,6 +7,7 @@ export EXP_LOADS=()
 export EXP_REPETITION_COUNTS=()
 export EXP_THREAT_COUNTS=()
 export EXP_COUNTS=()
+export EXP_REGIONS=()
 
 for filename in measurementplans/*.json; do
     EXP_NAMES+=($(jq -r '.name' $filename))
@@ -15,6 +16,7 @@ for filename in measurementplans/*.json; do
     EXP_LOADS+=($(jq -r '.load' $filename))
     EXP_REPETITION_COUNTS+=($(jq -r '.repetitions' $filename))
     EXP_THREAT_COUNTS+=($(jq -r '.loadriverthreats' $filename))
+    EXP_REGIONS+=($(jq -r '.region' $filename))
     EXP_COUNTS+=( 1 )
 done
 
@@ -36,14 +38,16 @@ do
 			export EXP_LOAD=${EXP_LOADS[$index]}
 			export EXP_THREATS=${EXP_THREAT_COUNTS[$index]}
 			export EXP_REPETITION=${EXP_COUNTS[$index]}
+      export EXP_REGION=${EXP_REGIONS[$index]}
 			EXP_COUNTS[$index]=$(( ${EXP_COUNTS[$index]}+1 ))
 			echo "---"
-			echo $EXP_NAME
-			echo $EXP_MEMORY_SIZE
-			echo $EXP_DURATION
-			echo $EXP_LOAD
-			echo $EXP_THREATS
-			echo $EXP_REPETITION
+			echo ${EXP_NAME}
+			echo ${EXP_MEMORY_SIZE}
+			echo ${EXP_DURATION}
+			echo ${EXP_LOAD}
+			echo ${EXP_THREATS}
+			echo ${EXP_REPETITION}
+      echo ${EXP_REGION}
 			echo "---"
 			./run.sh
 		fi

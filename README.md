@@ -15,7 +15,7 @@ sb prepare [--local]
 # remove old versions
 docker rm -f hello-retail
 # build with the Dockerfile using the online git repository
-docker build --no-cache --build-arg AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY_ID> --build-arg AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY> . -t hello-retail
+docker build --no-cache --build-arg AWS_DEFAULT_REGION=eu-west-1 --build-arg AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY_ID> --build-arg AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY> . -t hello-retail
 # start up the container
 docker run -d --name hello-retail hello-retail
 # execute the experiment script in the docker environment
