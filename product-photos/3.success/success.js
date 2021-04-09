@@ -113,7 +113,7 @@ function handlerWrapper(event, context, payload, callback) {
             N: `${afterPkgsTx - beforePkgsTx}`
           }
         },
-        TableName: "metrics.event-writer"
+        TableName: "metrics.photo-success"
       }, function (err, data) {
         if (err) {
           console.log("Error", err);
@@ -160,4 +160,3 @@ exports.handler = function(event, context, callback) {
     callback(null, result)
   }, callback);
 }
-

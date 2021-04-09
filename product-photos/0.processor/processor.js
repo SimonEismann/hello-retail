@@ -297,7 +297,7 @@ function handler(event, context, payload, callback) {
             N: `${afterPkgsTx - beforePkgsTx}`
           }
         },
-        TableName: "metrics.event-writer"
+        TableName: "metrics.photo-processor"
       }, function (err, data) {
         if (err) {
           console.log("Error", err);
