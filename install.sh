@@ -7,7 +7,7 @@ echo $ACCOUNT_ID
 
 # change default bucket name
 DOMAIN="hello-retail-${ACCOUNT_ID}.biz"
-sed -i "s|hello-retail.biz|${DOMAIN}|g" deploy.sh
+sed -i "s|hello-retail.biz|${DOMAIN}|g" web/deploy.sh
 sed -i "s|hello-retail.biz|${DOMAIN}|g" private.yml
 sed -i "s|hello-retail.biz|${DOMAIN}|g" product-photos/productPhotos.yml
 
